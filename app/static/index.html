@@ -48,7 +48,10 @@
                         <p class="card-kicker">Sandbox</p>
                         <h2>Execution Studio</h2>
                     </div>
-                    <button id="run-button" type="button">Run In Sandbox</button>
+                    <button id="run-button" type="button">
+                        <span class="button-loader hidden" id="run-loader"></span>
+                        <span id="run-button-label">Run In Sandbox</span>
+                    </button>
                 </div>
 
                 <div class="toolbar-grid">
@@ -92,7 +95,13 @@
                             <p class="card-kicker">Provider Setup</p>
                             <h3 id="setup-title">Use Ollama Locally For Free</h3>
                         </div>
-                        <button id="copy-setup-button" type="button" class="ghost-button">Copy Setup Command</button>
+                        <div class="setup-actions">
+                            <button id="test-ai-button" type="button" class="ghost-button">
+                                <span class="button-loader hidden" id="test-loader"></span>
+                                <span id="test-button-label">Test AI Connection</span>
+                            </button>
+                            <button id="copy-setup-button" type="button" class="ghost-button">Copy Setup Command</button>
+                        </div>
                     </div>
                     <p id="setup-description" class="setup-copy">
                         Install Ollama on the user's machine, then pull a model locally. This is the best free local-first option.
@@ -104,6 +113,7 @@
                     <div class="provider-warning" id="provider-warning">
                         Hosted app tip: use Groq or OpenRouter here. Ollama works only when this app is running on the same local machine as your Ollama installation.
                     </div>
+                    <pre id="connection-test-result" class="setup-command subtle-box">No AI connection test has been run yet.</pre>
                 </section>
 
                 <div class="editor-grid">
@@ -147,7 +157,10 @@
                         <p class="card-kicker">AI Assistant</p>
                         <h2>Ask Any Question</h2>
                     </div>
-                    <button id="ask-ai-button" type="button" class="secondary-button">Ask AI</button>
+                    <button id="ask-ai-button" type="button" class="secondary-button">
+                        <span class="button-loader hidden" id="ask-loader"></span>
+                        <span id="ask-button-label">Ask AI</span>
+                    </button>
                 </div>
 
                 <div class="panel">

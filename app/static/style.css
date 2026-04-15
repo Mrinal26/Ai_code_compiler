@@ -209,6 +209,12 @@ body {
     align-items: flex-start;
 }
 
+.setup-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
 .setup-header h3 {
     margin: 0;
     font-size: 1.05rem;
@@ -238,6 +244,11 @@ body {
     background: rgba(8, 13, 24, 0.92);
     overflow: auto;
     white-space: pre-wrap;
+}
+
+.subtle-box {
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--muted);
 }
 
 .editor-grid,
@@ -319,6 +330,10 @@ button {
     cursor: pointer;
     box-shadow: 0 16px 30px rgba(255, 79, 135, 0.26);
     transition: transform 0.18s ease, opacity 0.18s ease, box-shadow 0.18s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
 }
 
 button:hover {
@@ -409,6 +424,35 @@ button:disabled {
     animation: rise 0.7s ease both;
 }
 
+.button-loader {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 3px solid rgba(255, 255, 255, 0.25);
+    border-top-color: white;
+    animation: whirl 0.8s linear infinite;
+    position: relative;
+}
+
+.button-loader::before,
+.button-loader::after {
+    content: "";
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    top: -5px;
+}
+
+.button-loader::before {
+    left: -2px;
+}
+
+.button-loader::after {
+    right: -2px;
+}
+
 @keyframes rise {
     from {
         opacity: 0;
@@ -426,6 +470,15 @@ button:disabled {
     }
     to {
         transform: translate3d(24px, 18px, 0) scale(1.06);
+    }
+}
+
+@keyframes whirl {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
     }
 }
 

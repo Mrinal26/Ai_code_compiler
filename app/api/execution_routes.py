@@ -2,10 +2,15 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.db.database import get_db
-from app.schemas.ai import AIChatRequest, AIChatResponse
+from app.schemas.ai import (
+    AIChatRequest,
+    AIChatResponse,
+    AIConnectionTestRequest,
+    AIConnectionTestResponse,
+)
 from app.schemas.execution import ExecutionCreate, ExecutionResponse
 from app.services.execution_service import create_execution, get_execution
-from app.services.llm_service import answer_general_question
+from app.services.llm_service import answer_general_question, test_ai_connection
 
 
 router = APIRouter(prefix="/executions", tags=["Executions"])
@@ -42,3 +47,18 @@ def ai_chat(payload: AIChatRequest):
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
     return AIChatResponse(answer=answer)
+
+
+@router.post("/ai/test", response_model=AIConnectionTestResponse)
+def ai_test(payload: AIConnectionTestRequest):
+    try:
+        message = test_ai_connection(payload.ai_config)
+    except Exception as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+    return AIConnectionTestResponse(
+        ok=True,
+        provider=payload.ai_config.provider,
+        model=payload.ai_config.model,
+        message=message,
+    )

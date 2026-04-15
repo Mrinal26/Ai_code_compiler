@@ -162,3 +162,8 @@ Answer in a helpful, direct style. If the question is about code, explain it in 
 """
 
     return _run_prompt(prompt, ai_config)
+
+
+def test_ai_connection(ai_config: AIConfig) -> str:
+    prompt = "Reply with a short one-line confirmation that the AI connection is working."
+    return _run_prompt(prompt, ai_config)

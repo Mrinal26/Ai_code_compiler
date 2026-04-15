@@ -1,5 +1,11 @@
 const runButton = document.getElementById("run-button");
 const askAiButton = document.getElementById("ask-ai-button");
+const runLoader = document.getElementById("run-loader");
+const testLoader = document.getElementById("test-loader");
+const askLoader = document.getElementById("ask-loader");
+const runButtonLabel = document.getElementById("run-button-label");
+const testButtonLabel = document.getElementById("test-button-label");
+const askButtonLabel = document.getElementById("ask-button-label");
 const languageInput = document.getElementById("language");
 const providerInput = document.getElementById("provider");
 const modelInput = document.getElementById("ai_model");
@@ -9,11 +15,13 @@ const apiKeyLabel = document.getElementById("api-key-label");
 const baseUrlGroup = document.getElementById("base-url-group");
 const apiKeyGroup = document.getElementById("api-key-group");
 const copySetupButton = document.getElementById("copy-setup-button");
+const testAiButton = document.getElementById("test-ai-button");
 const setupTitle = document.getElementById("setup-title");
 const setupDescription = document.getElementById("setup-description");
 const setupCommand = document.getElementById("setup-command");
 const setupNote = document.getElementById("setup-note");
 const providerWarning = document.getElementById("provider-warning");
+const connectionTestResult = document.getElementById("connection-test-result");
 const codeInput = document.getElementById("code");
 const stdinInput = document.getElementById("stdin_input");
 const aiQuestionInput = document.getElementById("ai_question");
@@ -42,6 +50,12 @@ function getAiConfig() {
         base_url: baseUrlInput.value.trim(),
         api_key: apiKeyInput.value.trim() || null,
     };
+}
+
+function setButtonLoading(button, loader, labelElement, isLoading, loadingText, idleText) {
+    button.disabled = isLoading;
+    loader.classList.toggle("hidden", !isLoading);
+    labelElement.textContent = isLoading ? loadingText : idleText;
 }
 
 function syncProviderFields() {
@@ -105,7 +119,7 @@ async function runCode() {
         ai_config: getAiConfig(),
     };
 
-    runButton.disabled = true;
+    setButtonLoading(runButton, runLoader, runButtonLabel, true, "Running...", "Run In Sandbox");
     setStatus("Running", "Submitting code to the sandbox backend.");
     stdoutBox.textContent = "Running...";
     stderrBox.textContent = "Waiting for result...";
@@ -140,7 +154,7 @@ async function runCode() {
         stderrBox.textContent = error.message;
         explanationBox.textContent = "The AI explanation could not be generated.";
     } finally {
-        runButton.disabled = false;
+        setButtonLoading(runButton, runLoader, runButtonLabel, false, "Running...", "Run In Sandbox");
     }
 }
 
@@ -152,7 +166,7 @@ async function askAiQuestion() {
         return;
     }
 
-    askAiButton.disabled = true;
+    setButtonLoading(askAiButton, askLoader, askButtonLabel, true, "Thinking...", "Ask AI");
     aiAnswerBox.textContent = "Thinking...";
 
     try {
@@ -178,7 +192,7 @@ async function askAiQuestion() {
     } catch (error) {
         aiAnswerBox.textContent = error.message;
     } finally {
-        askAiButton.disabled = false;
+        setButtonLoading(askAiButton, askLoader, askButtonLabel, false, "Thinking...", "Ask AI");
     }
 }
 
@@ -197,8 +211,39 @@ async function copySetupCommand() {
     }
 }
 
+async function testAiConnection() {
+    setButtonLoading(testAiButton, testLoader, testButtonLabel, true, "Testing...", "Test AI Connection");
+    connectionTestResult.textContent = "Testing AI connection...";
+
+    try {
+        const response = await fetch("/api/v1/executions/ai/test", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                ai_config: getAiConfig(),
+            }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.detail || "AI connection test failed");
+        }
+
+        connectionTestResult.textContent =
+            `Connected successfully.\nProvider: ${data.provider}\nModel: ${data.model}\nResponse: ${data.message}`;
+    } catch (error) {
+        connectionTestResult.textContent = `Connection failed.\n${error.message}`;
+    } finally {
+        setButtonLoading(testAiButton, testLoader, testButtonLabel, false, "Testing...", "Test AI Connection");
+    }
+}
+
 providerInput.addEventListener("change", syncProviderFields);
 runButton.addEventListener("click", runCode);
 askAiButton.addEventListener("click", askAiQuestion);
 copySetupButton.addEventListener("click", copySetupCommand);
+testAiButton.addEventListener("click", testAiConnection);
 syncProviderFields();
