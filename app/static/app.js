@@ -65,9 +65,7 @@ function syncProviderFields() {
     baseUrlGroup.classList.toggle("hidden", provider !== "ollama");
 
     if (provider === "openrouter") {
-        if (!modelInput.value.trim() || modelInput.value === "llama3.2") {
-            modelInput.value = "deepseek/deepseek-r1:free";
-        }
+        modelInput.value = "openrouter/free";
 
         apiKeyLabel.textContent = "OpenRouter API Key";
         apiKeyInput.placeholder = "Paste your OpenRouter API key";
@@ -76,13 +74,11 @@ function syncProviderFields() {
             "OpenRouter works better for hosted usage. Ask the user to paste their own API key and choose a model.";
         setupCommand.textContent = "Create an OpenRouter key at https://openrouter.ai/keys";
         setupNote.textContent =
-            "Tip: This keeps usage tied to the user's own key, which is the simplest hosted AI path.";
+            "Tip: This keeps usage tied to the user's own key, which is the simplest hosted AI path. The default hosted model is openrouter/free.";
         providerWarning.textContent =
             "Hosted app tip: OpenRouter is a strong choice for deployed usage because it does not require local model setup.";
     } else if (provider === "groq") {
-        if (!modelInput.value.trim() || modelInput.value === "llama3.2" || modelInput.value === "deepseek/deepseek-r1:free") {
-            modelInput.value = "llama-3.1-8b-instant";
-        }
+        modelInput.value = "llama-3.1-8b-instant";
 
         apiKeyLabel.textContent = "Groq API Key";
         apiKeyInput.placeholder = "Paste your Groq API key";
@@ -95,9 +91,7 @@ function syncProviderFields() {
         providerWarning.textContent =
             "Hosted app tip: Groq is the best default for this deployed demo if you want a fast cloud AI path.";
     } else {
-        if (!modelInput.value.trim() || modelInput.value === "deepseek/deepseek-r1:free" || modelInput.value === "llama-3.1-8b-instant") {
-            modelInput.value = "llama3.2";
-        }
+        modelInput.value = "llama3.2";
 
         apiKeyLabel.textContent = "API Key";
         setupTitle.textContent = "Use Ollama Locally For Free";
