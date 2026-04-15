@@ -31,10 +31,11 @@ def create_execution_api(
 
 @router.get("/", response_model=list[ExecutionResponse])
 def list_executions_api(
+    session_id: str,
     limit: int = 10,
     db: Session = Depends(get_db)
 ):
-    return list_executions(db, limit=limit)
+    return list_executions(db, session_id=session_id, limit=limit)
 
 
 @router.get("/{execution_id}", response_model=ExecutionResponse)

@@ -46,6 +46,7 @@ const statusPill = document.getElementById("status-pill");
 const metaText = document.getElementById("meta-text");
 const tabButtons = document.querySelectorAll(".tab-button");
 const tabPanels = document.querySelectorAll(".tab-panel");
+const SESSION_STORAGE_KEY = "compiler_bot_session_id";
 
 const SNIPPETS = {
     hello_world: {
@@ -65,6 +66,19 @@ const SNIPPETS = {
         stdin: "",
     },
 };
+
+function getOrCreateSessionId() {
+    const existing = window.localStorage.getItem(SESSION_STORAGE_KEY);
+    if (existing) {
+        return existing;
+    }
+
+    const newSessionId = crypto.randomUUID();
+    window.localStorage.setItem(SESSION_STORAGE_KEY, newSessionId);
+    return newSessionId;
+}
+
+const sessionId = getOrCreateSessionId();
 
 function setStatus(status, message) {
     statusPill.textContent = status;
@@ -206,7 +220,9 @@ async function refreshHistory() {
     historyList.innerHTML = '<div class="history-empty">Loading recent executions...</div>';
 
     try {
-        const response = await fetch("/api/v1/executions/?limit=8");
+        const response = await fetch(
+            `/api/v1/executions/?session_id=${encodeURIComponent(sessionId)}&limit=8`
+        );
         const data = await response.json();
 
         if (!response.ok) {
@@ -245,6 +261,7 @@ async function loadExecutionFromHistory(executionId) {
 
 async function runCode() {
     const payload = {
+        session_id: sessionId,
         language: languageInput.value,
         code: codeInput.value,
         stdin_input: stdinInput.value,

@@ -8,6 +8,7 @@ from app.services.llm_service import explain_code_result
 
 def create_execution(db: Session, payload: ExecutionCreate) -> Execution:
     execution = Execution(
+        session_id=payload.session_id,
         language=payload.language,
         code=payload.code,
         stdin_input=payload.stdin_input,
@@ -54,9 +55,14 @@ def get_execution(db: Session, execution_id: int) -> Execution | None:
     return db.query(Execution).filter(Execution.id == execution_id).first()
 
 
-def list_executions(db: Session, limit: int = 10) -> list[Execution]:
+def list_executions(
+    db: Session,
+    session_id: str,
+    limit: int = 10,
+) -> list[Execution]:
     return (
         db.query(Execution)
+        .filter(Execution.session_id == session_id)
         .order_by(Execution.id.desc())
         .limit(limit)
         .all()

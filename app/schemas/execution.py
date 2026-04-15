@@ -9,6 +9,7 @@ class AIConfig(BaseModel):
 
 
 class ExecutionCreate(BaseModel):
+    session_id: str
     language: str
     code: str
     stdin_input: str | None = None
@@ -17,6 +18,7 @@ class ExecutionCreate(BaseModel):
 
 class ExecutionResponse(BaseModel):
     id: int
+    session_id: str
     language: str
     code: str
     stdin_input: str | None

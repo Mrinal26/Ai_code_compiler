@@ -7,6 +7,7 @@ class Execution(Base):
     __tablename__ = "executions"
 
     id = Column(Integer, primary_key=True, index=True)
+    session_id = Column(String(100), index=True, nullable=False)
     language = Column(String(50), nullable=False)
     code = Column(Text, nullable=False)
     stdin_input = Column(Text, nullable=True)
