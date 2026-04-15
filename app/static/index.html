@@ -213,15 +213,17 @@
                 </div>
 
                 <section class="history-card">
-                    <div class="history-header">
-                        <div>
-                            <p class="card-kicker">History</p>
-                            <h3>Recent Executions</h3>
-                        </div>
+                    <div class="history-topbar">
+                        <button id="toggle-history-button" type="button" class="setup-toggle">
+                            <span>Recent Executions</span>
+                            <span id="toggle-history-icon" class="toggle-icon">+</span>
+                        </button>
                         <button id="refresh-history-button" type="button" class="ghost-button">Refresh</button>
                     </div>
-                    <div id="history-list" class="history-list">
-                        <div class="history-empty">No executions loaded yet.</div>
+                    <div id="history-body" class="history-body hidden">
+                        <div class="history-list" id="history-list">
+                            <div class="history-empty">No executions loaded yet.</div>
+                        </div>
                     </div>
                 </section>
             </aside>

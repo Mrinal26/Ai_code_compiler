@@ -19,6 +19,9 @@ const apiKeyGroup = document.getElementById("api-key-group");
 const toggleSetupButton = document.getElementById("toggle-setup-button");
 const toggleSetupIcon = document.getElementById("toggle-setup-icon");
 const setupBody = document.getElementById("setup-body");
+const toggleHistoryButton = document.getElementById("toggle-history-button");
+const toggleHistoryIcon = document.getElementById("toggle-history-icon");
+const historyBody = document.getElementById("history-body");
 const copySetupButton = document.getElementById("copy-setup-button");
 const testAiButton = document.getElementById("test-ai-button");
 const setupTitle = document.getElementById("setup-title");
@@ -94,6 +97,13 @@ function toggleSetupPanel() {
     setupBody.classList.toggle("hidden", !isHidden);
     toggleSetupIcon.classList.toggle("open", isHidden);
     toggleSetupIcon.textContent = isHidden ? "+" : "+";
+}
+
+function toggleHistoryPanel() {
+    const isHidden = historyBody.classList.contains("hidden");
+    historyBody.classList.toggle("hidden", !isHidden);
+    toggleHistoryIcon.classList.toggle("open", isHidden);
+    toggleHistoryIcon.textContent = isHidden ? "+" : "+";
 }
 
 function activateTab(panelId) {
@@ -380,6 +390,7 @@ askAiButton.addEventListener("click", askAiQuestion);
 copySetupButton.addEventListener("click", copySetupCommand);
 testAiButton.addEventListener("click", testAiConnection);
 toggleSetupButton.addEventListener("click", toggleSetupPanel);
+toggleHistoryButton.addEventListener("click", toggleHistoryPanel);
 copyStdoutButton.addEventListener("click", () => copyText(stdoutBox.textContent, copyStdoutButton));
 copyStderrButton.addEventListener("click", () => copyText(stderrBox.textContent, copyStderrButton));
 copyExplanationButton.addEventListener("click", () => copyText(explanationBox.textContent, copyExplanationButton));
