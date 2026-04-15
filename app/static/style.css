@@ -220,6 +220,16 @@ body {
     line-height: 1.6;
 }
 
+.provider-warning {
+    margin-top: 12px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 122, 89, 0.22);
+    background: rgba(255, 122, 89, 0.08);
+    color: #ffd5c9;
+    line-height: 1.6;
+}
+
 .setup-command {
     margin: 14px 0 10px;
     padding: 14px 16px;

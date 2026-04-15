@@ -13,6 +13,7 @@ const setupTitle = document.getElementById("setup-title");
 const setupDescription = document.getElementById("setup-description");
 const setupCommand = document.getElementById("setup-command");
 const setupNote = document.getElementById("setup-note");
+const providerWarning = document.getElementById("provider-warning");
 const codeInput = document.getElementById("code");
 const stdinInput = document.getElementById("stdin_input");
 const aiQuestionInput = document.getElementById("ai_question");
@@ -49,10 +50,6 @@ function syncProviderFields() {
     apiKeyGroup.classList.toggle("hidden", !needsApiKey);
     baseUrlGroup.classList.toggle("hidden", provider !== "ollama");
 
-    if (provider === "ollama" && !modelInput.value.trim()) {
-        modelInput.value = "llama3.2";
-    }
-
     if (provider === "openrouter") {
         if (!modelInput.value.trim() || modelInput.value === "llama3.2") {
             modelInput.value = "deepseek/deepseek-r1:free";
@@ -66,8 +63,10 @@ function syncProviderFields() {
         setupCommand.textContent = "Create an OpenRouter key at https://openrouter.ai/keys";
         setupNote.textContent =
             "Tip: This keeps usage tied to the user's own key, which is the simplest hosted AI path.";
+        providerWarning.textContent =
+            "Hosted app tip: OpenRouter is a strong choice for deployed usage because it does not require local model setup.";
     } else if (provider === "groq") {
-        if (!modelInput.value.trim() || modelInput.value === "llama3.2") {
+        if (!modelInput.value.trim() || modelInput.value === "llama3.2" || modelInput.value === "deepseek/deepseek-r1:free") {
             modelInput.value = "llama-3.1-8b-instant";
         }
 
@@ -79,18 +78,22 @@ function syncProviderFields() {
         setupCommand.textContent = "Create a Groq key at https://console.groq.com/keys";
         setupNote.textContent =
             "Tip: Groq is often a great hosted demo option when you want fast responses without local model setup.";
+        providerWarning.textContent =
+            "Hosted app tip: Groq is the best default for this deployed demo if you want a fast cloud AI path.";
     } else {
-        if (!modelInput.value.trim() || modelInput.value === "deepseek/deepseek-r1:free") {
+        if (!modelInput.value.trim() || modelInput.value === "deepseek/deepseek-r1:free" || modelInput.value === "llama-3.1-8b-instant") {
             modelInput.value = "llama3.2";
         }
 
         apiKeyLabel.textContent = "API Key";
         setupTitle.textContent = "Use Ollama Locally For Free";
         setupDescription.textContent =
-            "Install Ollama on the user's machine, then pull a local model. This is the best free local-first option.";
+            "Install Ollama on the user's machine, then pull a local model. Ollama only works when this app is running on the same local machine as the Ollama server.";
         setupCommand.textContent = "ollama pull llama3.2";
         setupNote.textContent =
-            "Tip: Ollama is ideal for local usage. For hosted usage, OpenRouter is usually the better fit.";
+            "Tip: Ollama is ideal for local usage only. If this app is opened from a hosted URL, use Groq or OpenRouter instead.";
+        providerWarning.textContent =
+            "Local-only reminder: Ollama will not work from the hosted Render app unless the backend is running on your own machine with Ollama installed.";
     }
 }
 

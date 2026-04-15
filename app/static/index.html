@@ -62,9 +62,9 @@
                     <div class="field">
                         <label for="provider">AI Provider</label>
                         <select id="provider">
-                            <option value="ollama">Ollama</option>
-                            <option value="openrouter">OpenRouter</option>
-                            <option value="groq">Groq</option>
+                            <option value="groq">Groq (Hosted)</option>
+                            <option value="openrouter">OpenRouter (Hosted)</option>
+                            <option value="ollama">Ollama (Local only)</option>
                         </select>
                     </div>
 
@@ -101,6 +101,9 @@
                     <p class="setup-note" id="setup-note">
                         Tip: Ollama is ideal for local usage. For hosted usage, OpenRouter is usually the better fit.
                     </p>
+                    <div class="provider-warning" id="provider-warning">
+                        Hosted app tip: use Groq or OpenRouter here. Ollama works only when this app is running on the same local machine as your Ollama installation.
+                    </div>
                 </section>
 
                 <div class="editor-grid">
