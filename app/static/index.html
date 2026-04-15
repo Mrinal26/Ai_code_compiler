@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compiler Bot Sandbox</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="page-glow page-glow-left"></div>
+    <div class="page-glow page-glow-right"></div>
+
+    <main class="app-shell">
+        <section class="hero-card reveal">
+            <div class="hero-copy-block">
+                <p class="eyebrow">Creative Sandbox</p>
+                <h1>Run code, inspect output, and ask AI follow-up questions in one modern workspace.</h1>
+                <p class="hero-copy">
+                    Choose local Ollama for a free local-first flow, or switch to OpenRouter with your own key.
+                    The sandbox handles execution, explanation, and AI chat from the same screen.
+                </p>
+                <div class="hero-badges">
+                    <span>Python Execution</span>
+                    <span>AI Explain</span>
+                    <span>Ask Anything</span>
+                </div>
+            </div>
+            <div class="hero-stats">
+                <div class="stat-card">
+                    <span class="stat-label">Mode</span>
+                    <strong>Local-First</strong>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">AI Providers</span>
+                    <strong>Ollama + OpenRouter</strong>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Flow</span>
+                    <strong>Execute, Explain, Chat</strong>
+                </div>
+            </div>
+        </section>
+
+        <section class="workspace">
+            <section class="sandbox-card reveal">
+                <div class="card-header">
+                    <div>
+                        <p class="card-kicker">Sandbox</p>
+                        <h2>Execution Studio</h2>
+                    </div>
+                    <button id="run-button" type="button">Run In Sandbox</button>
+                </div>
+
+                <div class="toolbar-grid">
+                    <div class="field">
+                        <label for="language">Language</label>
+                        <select id="language">
+                            <option value="python">Python</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="provider">AI Provider</label>
+                        <select id="provider">
+                            <option value="ollama">Ollama</option>
+                            <option value="openrouter">OpenRouter</option>
+                            <option value="groq">Groq</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="ai_model">Model</label>
+                        <input id="ai_model" type="text" value="llama3.2">
+                    </div>
+                </div>
+
+                <div class="toolbar-grid provider-grid">
+                    <div class="field" id="base-url-group">
+                        <label for="base_url">Ollama Base URL</label>
+                        <input id="base_url" type="text" value="http://127.0.0.1:11434">
+                    </div>
+
+                    <div class="field hidden" id="api-key-group">
+                        <label for="api_key" id="api-key-label">API Key</label>
+                        <input id="api_key" type="password" placeholder="Paste your OpenRouter API key">
+                    </div>
+                </div>
+
+                <section class="setup-card">
+                    <div class="setup-header">
+                        <div>
+                            <p class="card-kicker">Provider Setup</p>
+                            <h3 id="setup-title">Use Ollama Locally For Free</h3>
+                        </div>
+                        <button id="copy-setup-button" type="button" class="ghost-button">Copy Setup Command</button>
+                    </div>
+                    <p id="setup-description" class="setup-copy">
+                        Install Ollama on the user's machine, then pull a model locally. This is the best free local-first option.
+                    </p>
+                    <pre id="setup-command" class="setup-command">ollama pull llama3.2</pre>
+                    <p class="setup-note" id="setup-note">
+                        Tip: Ollama is ideal for local usage. For hosted usage, OpenRouter is usually the better fit.
+                    </p>
+                </section>
+
+                <div class="editor-grid">
+                    <div class="panel">
+                        <label for="code">Code</label>
+                        <textarea id="code" spellcheck="false">print("Hello from Compiler Bot")</textarea>
+                    </div>
+
+                    <div class="panel">
+                        <label for="stdin_input">Standard Input</label>
+                        <textarea id="stdin_input" spellcheck="false" placeholder="Optional input for input() calls"></textarea>
+                    </div>
+                </div>
+
+                <div class="status-row">
+                    <div class="status-pill" id="status-pill">Idle</div>
+                    <div class="meta" id="meta-text">Ready to execute locally.</div>
+                </div>
+
+                <div class="results-grid">
+                    <section class="panel">
+                        <label for="stdout">Standard Output</label>
+                        <pre id="stdout" class="result-box">Nothing has run yet.</pre>
+                    </section>
+
+                    <section class="panel">
+                        <label for="stderr">Errors</label>
+                        <pre id="stderr" class="result-box">No errors yet.</pre>
+                    </section>
+                </div>
+
+                <section class="panel explanation-panel">
+                    <label for="llm_explanation">AI Explanation</label>
+                    <pre id="llm_explanation" class="result-box">Run code to get an explanation.</pre>
+                </section>
+            </section>
+
+            <aside class="chat-card reveal">
+                <div class="card-header chat-header">
+                    <div>
+                        <p class="card-kicker">AI Assistant</p>
+                        <h2>Ask Any Question</h2>
+                    </div>
+                    <button id="ask-ai-button" type="button" class="secondary-button">Ask AI</button>
+                </div>
+
+                <div class="panel">
+                    <label for="ai_question">Question</label>
+                    <textarea id="ai_question" class="question-box" spellcheck="false" placeholder="Ask about your code, errors, architecture, or next steps."></textarea>
+                </div>
+
+                <div class="panel">
+                    <label for="ai_answer">AI Response</label>
+                    <pre id="ai_answer" class="result-box chat-box">Ask a question to start the conversation.</pre>
+                </div>
+            </aside>
+        </section>
+    </main>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
