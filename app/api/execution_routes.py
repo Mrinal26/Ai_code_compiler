@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 
 from app.db.database import get_db
@@ -9,8 +10,12 @@ from app.schemas.ai import (
     AIConnectionTestResponse,
 )
 from app.schemas.execution import ExecutionCreate, ExecutionResponse
-from app.services.execution_service import create_execution, get_execution
-from app.services.llm_service import answer_general_question, test_ai_connection
+from app.services.execution_service import create_execution, get_execution, list_executions
+from app.services.llm_service import (
+    answer_general_question,
+    stream_general_question,
+    test_ai_connection,
+)
 
 
 router = APIRouter(prefix="/executions", tags=["Executions"])
@@ -22,6 +27,14 @@ def create_execution_api(
     db: Session = Depends(get_db)
 ):
     return create_execution(db, payload)
+
+
+@router.get("/", response_model=list[ExecutionResponse])
+def list_executions_api(
+    limit: int = 10,
+    db: Session = Depends(get_db)
+):
+    return list_executions(db, limit=limit)
 
 
 @router.get("/{execution_id}", response_model=ExecutionResponse)
@@ -47,6 +60,20 @@ def ai_chat(payload: AIChatRequest):
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
     return AIChatResponse(answer=answer)
+
+
+@router.post("/ai/chat/stream")
+def ai_chat_stream(payload: AIChatRequest):
+    try:
+        stream = stream_general_question(
+            question=payload.question,
+            ai_config=payload.ai_config,
+            context=payload.context,
+        )
+    except Exception as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+    return StreamingResponse(stream, media_type="text/plain")
 
 
 @router.post("/ai/test", response_model=AIConnectionTestResponse)

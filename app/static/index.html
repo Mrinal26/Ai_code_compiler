@@ -54,6 +54,23 @@
                     </button>
                 </div>
 
+                <div class="toolbar-grid snippet-grid">
+                    <div class="field">
+                        <label for="snippet-select">Example Snippets</label>
+                        <select id="snippet-select">
+                            <option value="">Choose an example</option>
+                            <option value="hello_world">Hello World</option>
+                            <option value="input_example">Input Example</option>
+                            <option value="loop_example">Loop Example</option>
+                            <option value="error_example">Error Example</option>
+                        </select>
+                    </div>
+                    <div class="field snippet-action">
+                        <label>&nbsp;</label>
+                        <button id="load-snippet-button" type="button" class="ghost-button">Load Snippet</button>
+                    </div>
+                </div>
+
                 <div class="toolbar-grid">
                     <div class="field">
                         <label for="language">Language</label>
@@ -65,7 +82,6 @@
                     <div class="field">
                         <label for="provider">AI Provider</label>
                         <select id="provider">
-                            <option value="groq">Groq (Hosted)</option>
                             <option value="openrouter">OpenRouter (Hosted)</option>
                             <option value="ollama">Ollama (Local only)</option>
                         </select>
@@ -90,11 +106,11 @@
                 </div>
 
                 <section class="setup-card">
-                    <div class="setup-header">
-                        <div>
-                            <p class="card-kicker">Provider Setup</p>
-                            <h3 id="setup-title">Use Ollama Locally For Free</h3>
-                        </div>
+                    <div class="setup-topbar">
+                        <button id="toggle-setup-button" type="button" class="setup-toggle">
+                            <span>Provider Setup</span>
+                            <span id="toggle-setup-icon" class="toggle-icon">+</span>
+                        </button>
                         <div class="setup-actions">
                             <button id="test-ai-button" type="button" class="ghost-button">
                                 <span class="button-loader hidden" id="test-loader"></span>
@@ -103,17 +119,25 @@
                             <button id="copy-setup-button" type="button" class="ghost-button">Copy Setup Command</button>
                         </div>
                     </div>
-                    <p id="setup-description" class="setup-copy">
-                        Install Ollama on the user's machine, then pull a model locally. This is the best free local-first option.
-                    </p>
-                    <pre id="setup-command" class="setup-command">ollama pull llama3.2</pre>
-                    <p class="setup-note" id="setup-note">
-                        Tip: Ollama is ideal for local usage. For hosted usage, OpenRouter is usually the better fit.
-                    </p>
-                    <div class="provider-warning" id="provider-warning">
-                        Hosted app tip: use Groq or OpenRouter here. Ollama works only when this app is running on the same local machine as your Ollama installation.
+                    <div id="setup-body" class="setup-body hidden">
+                        <div class="setup-header">
+                            <div>
+                                <p class="card-kicker">Provider Setup</p>
+                                <h3 id="setup-title">Use Ollama Locally For Free</h3>
+                            </div>
+                        </div>
+                        <p id="setup-description" class="setup-copy">
+                            Install Ollama on the user's machine, then pull a model locally. This is the best free local-first option.
+                        </p>
+                        <pre id="setup-command" class="setup-command">ollama pull llama3.2</pre>
+                        <p class="setup-note" id="setup-note">
+                            Tip: Ollama is ideal for local usage. For hosted usage, OpenRouter is usually the better fit.
+                        </p>
+                        <div class="provider-warning" id="provider-warning">
+                            Hosted app tip: use OpenRouter here. Ollama works only when this app is running on the same local machine as your Ollama installation.
+                        </div>
+                        <pre id="connection-test-result" class="setup-command subtle-box">No AI connection test has been run yet.</pre>
                     </div>
-                    <pre id="connection-test-result" class="setup-command subtle-box">No AI connection test has been run yet.</pre>
                 </section>
 
                 <div class="editor-grid">
@@ -133,22 +157,37 @@
                     <div class="meta" id="meta-text">Ready to execute locally.</div>
                 </div>
 
-                <div class="results-grid">
-                    <section class="panel">
+                <div class="result-tabs">
+                    <button class="tab-button active" data-tab="stdout-panel" type="button">Output</button>
+                    <button class="tab-button" data-tab="stderr-panel" type="button">Errors</button>
+                    <button class="tab-button" data-tab="explanation-panel" type="button">AI Explanation</button>
+                </div>
+
+                <div class="tab-panels">
+                    <section class="panel tab-panel active" id="stdout-panel">
                         <label for="stdout">Standard Output</label>
+                        <div class="panel-actions">
+                            <button id="copy-stdout-button" type="button" class="ghost-button">Copy Output</button>
+                        </div>
                         <pre id="stdout" class="result-box">Nothing has run yet.</pre>
                     </section>
 
-                    <section class="panel">
+                    <section class="panel tab-panel" id="stderr-panel">
                         <label for="stderr">Errors</label>
-                        <pre id="stderr" class="result-box">No errors yet.</pre>
+                        <div class="panel-actions">
+                            <button id="copy-stderr-button" type="button" class="ghost-button">Copy Errors</button>
+                        </div>
+                        <pre id="stderr" class="result-box error-box">No errors yet.</pre>
+                    </section>
+
+                    <section class="panel explanation-panel tab-panel" id="explanation-panel">
+                        <label for="llm_explanation">AI Explanation</label>
+                        <div class="panel-actions">
+                            <button id="copy-explanation-button" type="button" class="ghost-button">Copy Explanation</button>
+                        </div>
+                        <pre id="llm_explanation" class="result-box explanation-box">Run code to get an explanation.</pre>
                     </section>
                 </div>
-
-                <section class="panel explanation-panel">
-                    <label for="llm_explanation">AI Explanation</label>
-                    <pre id="llm_explanation" class="result-box">Run code to get an explanation.</pre>
-                </section>
             </section>
 
             <aside class="chat-card reveal">
@@ -172,6 +211,19 @@
                     <label for="ai_answer">AI Response</label>
                     <pre id="ai_answer" class="result-box chat-box">Ask a question to start the conversation.</pre>
                 </div>
+
+                <section class="history-card">
+                    <div class="history-header">
+                        <div>
+                            <p class="card-kicker">History</p>
+                            <h3>Recent Executions</h3>
+                        </div>
+                        <button id="refresh-history-button" type="button" class="ghost-button">Refresh</button>
+                    </div>
+                    <div id="history-list" class="history-list">
+                        <div class="history-empty">No executions loaded yet.</div>
+                    </div>
+                </section>
             </aside>
         </section>
     </main>

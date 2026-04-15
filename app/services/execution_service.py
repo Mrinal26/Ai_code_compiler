@@ -52,3 +52,12 @@ def create_execution(db: Session, payload: ExecutionCreate) -> Execution:
 
 def get_execution(db: Session, execution_id: int) -> Execution | None:
     return db.query(Execution).filter(Execution.id == execution_id).first()
+
+
+def list_executions(db: Session, limit: int = 10) -> list[Execution]:
+    return (
+        db.query(Execution)
+        .order_by(Execution.id.desc())
+        .limit(limit)
+        .all()
+    )
